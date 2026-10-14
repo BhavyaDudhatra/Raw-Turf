@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1"]
+
+[sub_resource type="CapsuleShape3D" id="col"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="mesh"]
+radius = 0.4
+height = 1.8
+radial_segments = 16
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.2, 0.5, 0.9, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="visor"]
+size = Vector3(0.34, 0.16, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="mat_visor"]
+albedo_color = Color(0.04, 0.06, 0.09, 1)
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("col")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.9, 0)
+mesh = SubResource("mesh")
+surface_material_override/0 = SubResource("mat_body")
+
+[node name="Visor" type="MeshInstance3D" parent="Mesh"]
+position = Vector3(0, 0.45, -0.32)
+mesh = SubResource("visor")
+surface_material_override/0 = SubResource("mat_visor")
+
+[node name="CamPivot" type="Node3D" parent="."]
+position = Vector3(0, 1.6, 0)
+
+[node name="SpringArm" type="SpringArm3D" parent="CamPivot"]
+spring_length = 4.0
+margin = 0.3
+
+[node name="Camera" type="Camera3D" parent="CamPivot/SpringArm"]
+current = true
+fov = 70.0
