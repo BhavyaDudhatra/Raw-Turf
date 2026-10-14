@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3]
+[gd_scene load_steps=65 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2"]
@@ -11,6 +11,21 @@
 [ext_resource type="Script" path="res://scripts/missions/mission_contact.gd" id="9"]
 [ext_resource type="Script" path="res://scripts/missions/delivery_dock.gd" id="10"]
 [ext_resource type="Script" path="res://scripts/save/save_manager.gd" id="11"]
+[ext_resource type="PackedScene" path="res://assets/buildings/kenney_building-j.glb" id="12"]
+[ext_resource type="PackedScene" path="res://assets/buildings/kenney_building-f.glb" id="13"]
+[ext_resource type="PackedScene" path="res://assets/buildings/kenney_building-a.glb" id="14"]
+[ext_resource type="Texture2D" path="res://assets/textures/asphalt_02_1k/asphalt_02_diff_1k.jpg" id="15"]
+[ext_resource type="Texture2D" path="res://assets/textures/asphalt_02_1k/asphalt_02_nor_gl_1k.jpg" id="16"]
+[ext_resource type="Texture2D" path="res://assets/textures/asphalt_02_1k/asphalt_02_rough_1k.jpg" id="17"]
+[ext_resource type="Texture2D" path="res://assets/textures/concrete_pavement_1k/concrete_pavement_diff_1k.jpg" id="18"]
+[ext_resource type="Texture2D" path="res://assets/textures/concrete_pavement_1k/concrete_pavement_nor_gl_1k.jpg" id="19"]
+[ext_resource type="Texture2D" path="res://assets/textures/concrete_pavement_1k/concrete_pavement_rough_1k.jpg" id="20"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_construction-cone.glb" id="21"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_construction-barrier.glb" id="22"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_dumpster.glb" id="23"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_light-curved.glb" id="24"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_road-sign-stop.glb" id="25"]
+[ext_resource type="PackedScene" path="res://assets/props/kenney_traffic-light.glb" id="26"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.9, 1)
@@ -27,6 +42,12 @@ sky = SubResource("sky")
 ambient_light_source = 3
 ambient_light_energy = 0.6
 tonemap_mode = 2
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.68, 0.76, 0.88, 1)
+fog_sky_affect = 0.0
+fog_depth_begin = 30.0
+fog_depth_end = 90.0
 
 [sub_resource type="BoxShape3D" id="ground_shape"]
 size = Vector3(40, 1, 40)
@@ -143,6 +164,51 @@ radius = 2.5
 [sub_resource type="BoxShape3D" id="dock_shape"]
 size = Vector3(6, 3, 6)
 
+[sub_resource type="StandardMaterial3D" id="mat_road_harbor"]
+albedo_texture = ExtResource("15")
+roughness = 1.0
+roughness_map = ExtResource("17")
+normal_enabled = true
+normal_map = ExtResource("16")
+normal_scale = 1.0
+uv1_scale = Vector3(10, 2, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_road_canner"]
+albedo_texture = ExtResource("15")
+roughness = 1.0
+roughness_map = ExtResource("17")
+normal_enabled = true
+normal_map = ExtResource("16")
+normal_scale = 1.0
+uv1_scale = Vector3(2, 10, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_walk_harbor"]
+albedo_texture = ExtResource("18")
+roughness = 1.0
+roughness_map = ExtResource("20")
+normal_enabled = true
+normal_map = ExtResource("19")
+normal_scale = 0.8
+uv1_scale = Vector3(12, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_walk_canner"]
+albedo_texture = ExtResource("18")
+roughness = 1.0
+roughness_map = ExtResource("20")
+normal_enabled = true
+normal_map = ExtResource("19")
+normal_scale = 0.8
+uv1_scale = Vector3(1, 12, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_road_dock"]
+albedo_texture = ExtResource("15")
+roughness = 1.0
+roughness_map = ExtResource("17")
+normal_enabled = true
+normal_map = ExtResource("16")
+normal_scale = 1.0
+uv1_scale = Vector3(2, 2, 1)
+
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -207,19 +273,19 @@ surface_material_override/0 = SubResource("mat_wall")
 position = Vector3(0, 0.02, 0)
 scale = Vector3(40, 0.04, 8)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_asphalt")
+surface_material_override/0 = SubResource("mat_road_harbor")
 
 [node name="HarborSideN" type="MeshInstance3D" parent="Roads"]
 position = Vector3(0, 0.03, -5)
 scale = Vector3(40, 0.06, 2)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_sidewalk")
+surface_material_override/0 = SubResource("mat_walk_harbor")
 
 [node name="HarborSideS" type="MeshInstance3D" parent="Roads"]
 position = Vector3(0, 0.03, 5)
 scale = Vector3(40, 0.06, 2)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_sidewalk")
+surface_material_override/0 = SubResource("mat_walk_harbor")
 
 [node name="DashM15" type="MeshInstance3D" parent="Roads"]
 position = Vector3(-15, 0.05, 0)
@@ -261,25 +327,34 @@ surface_material_override/0 = SubResource("mat_dash")
 position = Vector3(-10, 0.012, 0)
 scale = Vector3(6, 0.04, 40)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_asphalt")
+surface_material_override/0 = SubResource("mat_road_canner")
 
 [node name="CannerSideW" type="MeshInstance3D" parent="Roads"]
 position = Vector3(-14, 0.05, 0)
 scale = Vector3(2, 0.06, 40)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_sidewalk")
+surface_material_override/0 = SubResource("mat_walk_canner")
 
 [node name="CannerSideE" type="MeshInstance3D" parent="Roads"]
 position = Vector3(-6, 0.05, 0)
 scale = Vector3(2, 0.06, 40)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_sidewalk")
+surface_material_override/0 = SubResource("mat_walk_canner")
 
 [node name="Warehouse" parent="." instance=ExtResource("3")]
 position = Vector3(8, 0, -10)
 size = Vector3(10, 6, 8)
 wall_color = Color(0.6, 0.28, 0.2, 1)
 trim_color = Color(0.25, 0.25, 0.28, 1)
+
+[node name="Body" parent="Warehouse"]
+visible = false
+
+[node name="Roof" parent="Warehouse"]
+visible = false
+
+[node name="Shell" parent="Warehouse" instance=ExtResource("12")]
+scale = Vector3(4.79941, 3.54395, 5.97015)
 
 [node name="Garage" parent="." instance=ExtResource("3")]
 position = Vector3(9.5, 0, 12.5)
@@ -289,11 +364,29 @@ trim_color = Color(0.2, 0.22, 0.28, 1)
 door_color = Color(0.9, 0.45, 0.1, 1)
 door_width = 5.0
 
+[node name="Body" parent="Garage"]
+visible = false
+
+[node name="Roof" parent="Garage"]
+visible = false
+
+[node name="Shell" parent="Garage" instance=ExtResource("12")]
+scale = Vector3(5.75929, 2.95329, 5.22388)
+
 [node name="Apartments" parent="." instance=ExtResource("3")]
 position = Vector3(-16.5, 0, -12)
 size = Vector3(6, 9, 8)
 wall_color = Color(0.75, 0.68, 0.55, 1)
 trim_color = Color(0.15, 0.5, 0.5, 1)
+
+[node name="Body" parent="Apartments"]
+visible = false
+
+[node name="Roof" parent="Apartments"]
+visible = false
+
+[node name="Shell" parent="Apartments" instance=ExtResource("13")]
+scale = Vector3(7.14286, 5.31589, 7.76699)
 
 [node name="Shop" parent="." instance=ExtResource("3")]
 position = Vector3(-9, 0, 14.5)
@@ -301,6 +394,15 @@ size = Vector3(6, 4, 6)
 wall_color = Color(0.85, 0.8, 0.7, 1)
 trim_color = Color(0.5, 0.12, 0.1, 1)
 door_color = Color(0.7, 0.15, 0.12, 1)
+
+[node name="Body" parent="Shop"]
+visible = false
+
+[node name="Roof" parent="Shop"]
+visible = false
+
+[node name="Shell" parent="Shop" instance=ExtResource("14")]
+scale = Vector3(6.7905, 3.09358, 6.38298)
 
 [node name="Props" type="StaticBody3D" parent="."]
 
@@ -394,6 +496,46 @@ position = Vector3(6, 4.65, 5.5)
 scale = Vector3(0.6, 0.3, 0.6)
 mesh = SubResource("unit_box")
 surface_material_override/0 = SubResource("mat_lamp")
+
+[node name="StreetProps" type="Node3D" parent="."]
+
+[node name="LampK1" parent="StreetProps" instance=ExtResource("24")]
+position = Vector3(-2, 0, 5.0)
+scale = Vector3(7, 7, 7)
+
+[node name="LampK2" parent="StreetProps" instance=ExtResource("24")]
+position = Vector3(-4, 0, -5.0)
+rotation = Vector3(0, 3.14159, 0)
+scale = Vector3(7, 7, 7)
+
+[node name="Dumpster1" parent="StreetProps" instance=ExtResource("23")]
+position = Vector3(1.5, 0, -6.8)
+rotation = Vector3(0, 0.3, 0)
+scale = Vector3(4, 4, 4)
+
+[node name="Cone1" parent="StreetProps" instance=ExtResource("21")]
+position = Vector3(14.0, 0, -7.0)
+scale = Vector3(8, 8, 8)
+
+[node name="Cone2" parent="StreetProps" instance=ExtResource("21")]
+position = Vector3(15.0, 0, -8.0)
+scale = Vector3(8, 8, 8)
+
+[node name="Cone3" parent="StreetProps" instance=ExtResource("21")]
+position = Vector3(14.2, 0, -9.0)
+scale = Vector3(8, 8, 8)
+
+[node name="Barrier1" parent="StreetProps" instance=ExtResource("22")]
+position = Vector3(-10, 0, -18.5)
+scale = Vector3(6, 6, 6)
+
+[node name="SignStop1" parent="StreetProps" instance=ExtResource("25")]
+position = Vector3(-5, 0, 4.8)
+scale = Vector3(4, 4, 4)
+
+[node name="TrafficLight1" parent="StreetProps" instance=ExtResource("26")]
+position = Vector3(-15, 0, -4.8)
+scale = Vector3(5, 5, 5)
 
 [node name="SpawnPad" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.05, 8)
@@ -550,7 +692,7 @@ shape = SubResource("dock_shape")
 position = Vector3(0, 0.05, 0)
 scale = Vector3(6, 0.1, 6)
 mesh = SubResource("unit_box")
-surface_material_override/0 = SubResource("mat_asphalt")
+surface_material_override/0 = SubResource("mat_road_dock")
 
 [node name="BorderN" type="MeshInstance3D" parent="DeliveryDock"]
 position = Vector3(0, 0.12, -3)
