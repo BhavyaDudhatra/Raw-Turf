@@ -58,6 +58,12 @@ func _try_exit() -> void:
 	if spot == Vector3.INF:
 		_toast("No safe exit here — drive clear of walls first.")
 		return
+	_set_on_foot(spot)
+	_toast("On foot.")
+
+
+## Shared on-foot baseline used by exits AND save/load restoration.
+func _set_on_foot(spot: Vector3) -> void:
 	van.set("driving", false)
 	van.set("forward_speed", 0.0)
 	player.global_position = spot
@@ -67,8 +73,19 @@ func _try_exit() -> void:
 	van_camera.current = false
 	player_camera.current = true
 	mode = Mode.ON_FOOT
+	_was_pressed = true
 	_update_hud()
-	_toast("On foot.")
+
+
+## Save/load entry: rebuilds a coherent mode from validated data. Baseline is
+## forced on-foot first (idempotent), then driving is re-entered through the
+## normal path, so no frozen-hidden / walking-while-driving mix is possible.
+func apply_loaded_mode(driving_mode: bool) -> void:
+	_set_on_foot(player.global_position)
+	if driving_mode:
+		request_enter()
+	else:
+		_toast("On foot.")
 
 
 ## Driver side first, then passenger side, then behind the van. The front is
@@ -86,9 +103,19 @@ func _find_exit_spot() -> Vector3:
 		var candidate: Vector3 = van.global_position + yaw_basis * local
 		candidate.y = van.global_position.y + 1.0
 		params.transform = Transform3D(Basis(), candidate)
-		if space.intersect_shape(params, 1).is_empty():
-			return candidate
+		if _spot_is_solid(space, params):
+			continue
+		return candidate
 	return Vector3.INF
+
+
+## Trigger areas are not geometry: only solid bodies block an exit spot.
+func _spot_is_solid(space: PhysicsDirectSpaceState3D, params: PhysicsShapeQueryParameters3D) -> bool:
+	for h in space.intersect_shape(params, 8):
+		var c: Object = (h as Dictionary).get("collider")
+		if not (c is Area3D):
+			return true
+	return false
 
 
 func _process(_delta: float) -> void:

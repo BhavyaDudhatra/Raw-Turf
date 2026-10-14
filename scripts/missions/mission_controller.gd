@@ -18,6 +18,10 @@ var state: int = State.AVAILABLE
 var balance: int = 0
 var reward_paid: bool = false
 
+## Physics-frame deadline before which try_complete() refuses (used across
+## save/load restoration so a van restored inside the dock cannot auto-complete).
+var _suppress_until_frame: int = -1
+
 var _hud_label: Label
 var _player: Node3D
 var _van: Node3D
@@ -48,6 +52,8 @@ func accept_mission() -> bool:
 
 
 func try_complete() -> bool:
+	if Engine.get_physics_frames() < _suppress_until_frame:
+		return false
 	if state != State.ACTIVE or reward_paid:
 		return false
 	state = State.COMPLETED
@@ -57,6 +63,21 @@ func try_complete() -> bool:
 	_toast("DELIVERED: %s complete! +%dcr (balance %dcr)." % [mission_id, reward_credits, balance])
 	_update_hud()
 	return true
+
+
+## Restoration entry for the save system: sets state WITHOUT toasts or
+## gameplay events, then recomputes beacon + HUD. Caller pre-validates.
+func apply_loaded_state(p_state: int, p_balance: int, p_paid: bool) -> void:
+	state = clampi(p_state, State.AVAILABLE, State.COMPLETED)
+	balance = maxi(p_balance, 0)
+	reward_paid = p_paid or state == State.COMPLETED
+	_set_beacon(state == State.ACTIVE)
+	_update_hud()
+
+
+## Ignore dock completions for the next few physics frames (restore window).
+func suppress_completion(frames: int) -> void:
+	_suppress_until_frame = Engine.get_physics_frames() + frames
 
 
 func status_text() -> String:

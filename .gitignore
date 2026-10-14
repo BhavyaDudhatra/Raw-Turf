@@ -4,6 +4,9 @@ exports/
 *.tmp
 *.log
 
+# Development saves (local-only, never commit player data).
+userdata/
+
 # OS / editor leftovers
 Thumbs.db
 Desktop.ini

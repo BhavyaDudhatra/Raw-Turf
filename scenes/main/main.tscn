@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3]
+[gd_scene load_steps=46 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/missions/mission_controller.gd" id="8"]
 [ext_resource type="Script" path="res://scripts/missions/mission_contact.gd" id="9"]
 [ext_resource type="Script" path="res://scripts/missions/delivery_dock.gd" id="10"]
+[ext_resource type="Script" path="res://scripts/save/save_manager.gd" id="11"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.9, 1)
@@ -597,3 +598,6 @@ modulate = Color(0.7, 1, 1, 1)
 outline_size = 12
 outline_modulate = Color(0, 0, 0, 1)
 text = "PIER 9 DOCK"
+
+[node name="SaveSystem" type="Node" parent="."]
+script = ExtResource("11")
