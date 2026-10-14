@@ -19,8 +19,11 @@ extends CharacterBody3D
 @onready var cam_pivot: Node3D = $CamPivot
 @onready var body_mesh: MeshInstance3D = $Mesh
 
-## Walking | sprinting | airborne — read by the debug overlay.
+## Walking | sprinting | airborne | driving — read by the debug overlay.
 var movement_mode: String = "walking"
+## False while the VehicleSystem has the player seated in a vehicle:
+## movement input and mouse-look are ignored, the body just settles.
+var controls_enabled: bool = true
 
 var _pitch: float = -0.3
 var _spawn_position: Vector3
@@ -34,6 +37,13 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if not controls_enabled:
+		if event is InputEventMouseButton:
+			var mb := event as InputEventMouseButton
+			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT \
+					and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var motion := event as InputEventMouseMotion
 		cam_pivot.rotate_y(-motion.relative.x * mouse_sensitivity)
@@ -52,6 +62,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not controls_enabled:
+		# Seated in a vehicle: no input, just settle and report.
+		velocity.x = move_toward(velocity.x, 0.0, acceleration * delta)
+		velocity.z = move_toward(velocity.z, 0.0, acceleration * delta)
+		if not is_on_floor():
+			velocity.y -= gravity * delta
+		move_and_slide()
+		movement_mode = "driving"
+		return
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	# Grounded jumps only: just_pressed is true for exactly one physics tick,
