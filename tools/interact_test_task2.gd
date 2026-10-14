@@ -58,8 +58,9 @@ func _on_physics() -> void:
 			if _phase_tick >= 15:
 				_check(int(_contact.get("times_activated")) == 1, "contact: activated exactly once")
 				_check(int(_garage.get("times_activated")) == 0, "garage: not activated from spawn")
-				_check(String(_toast.get("last_message")).contains("COURIER"),
-					"toast: shows courier message")
+				# Task 4: the contact now briefs HB-01 instead of the old placeholder.
+				_check(String(_toast.get("last_message")).contains("HB-01"),
+					"toast: shows mission briefing")
 				_next_phase()
 				_place(Vector3(-15, 0.5, -2))
 		3: # Far from both targets: E must do nothing, prompts hidden.

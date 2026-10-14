@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3]
+[gd_scene load_steps=45 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2"]
@@ -7,6 +7,9 @@
 [ext_resource type="Script" path="res://scripts/interact/interactable.gd" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/vehicles/courier_van.tscn" id="6"]
 [ext_resource type="Script" path="res://scripts/vehicle/vehicle_system.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/missions/mission_controller.gd" id="8"]
+[ext_resource type="Script" path="res://scripts/missions/mission_contact.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/missions/delivery_dock.gd" id="10"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.9, 1)
@@ -135,6 +138,9 @@ radius = 3.0
 
 [sub_resource type="SphereShape3D" id="garage_shape"]
 radius = 2.5
+
+[sub_resource type="BoxShape3D" id="dock_shape"]
+size = Vector3(6, 3, 6)
 
 [node name="Main" type="Node3D"]
 
@@ -424,9 +430,8 @@ text = "ON FOOT"
 
 [node name="CourierContact" type="Area3D" parent="."]
 position = Vector3(2.2, 0, 6.2)
-script = ExtResource("5")
-prompt_text = "E — Talk to courier"
-response_text = "COURIER RANA: Package leaves from the garage dock. (Placeholder — missions arrive in Task 4.)"
+script = ExtResource("9")
+prompt_text = "E — Accept delivery (HB-01)"
 
 [node name="Range" type="CollisionShape3D" parent="CourierContact"]
 position = Vector3(0, 1, 0)
@@ -509,3 +514,86 @@ offset_right = 400.0
 offset_bottom = 120.0
 theme_override_font_sizes/font_size = 16
 text = "booting..."
+
+[node name="HB01Mission" type="Node" parent="."]
+script = ExtResource("8")
+
+[node name="MissionHUD" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="MissionHUD"]
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = -400.0
+offset_top = 12.0
+offset_right = 400.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+text = "HB-01"
+
+[node name="DeliveryDock" type="Area3D" parent="."]
+position = Vector3(16.5, 0, -13)
+script = ExtResource("10")
+
+[node name="Trigger" type="CollisionShape3D" parent="DeliveryDock"]
+position = Vector3(0, 1.5, 0)
+shape = SubResource("dock_shape")
+
+[node name="Pad" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(0, 0.05, 0)
+scale = Vector3(6, 0.1, 6)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_asphalt")
+
+[node name="BorderN" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(0, 0.12, -3)
+scale = Vector3(6.4, 0.15, 0.3)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pylon")
+
+[node name="BorderS" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(0, 0.12, 3)
+scale = Vector3(6.4, 0.15, 0.3)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pylon")
+
+[node name="BorderE" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(3, 0.12, 0)
+scale = Vector3(0.3, 0.15, 6.4)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pylon")
+
+[node name="BorderW" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(-3, 0.12, 0)
+scale = Vector3(0.3, 0.15, 6.4)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pylon")
+
+[node name="Pole" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(2.5, 2.25, -2.5)
+mesh = SubResource("pole_mesh")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Beacon" type="MeshInstance3D" parent="DeliveryDock"]
+position = Vector3(2.5, 4.8, -2.5)
+scale = Vector3(0.7, 0.7, 0.7)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pylon")
+visible = false
+
+[node name="DockSign" type="Label3D" parent="DeliveryDock"]
+position = Vector3(0, 5.8, 0)
+pixel_size = 0.01
+font_size = 48
+billboard = 1
+no_depth_test = true
+modulate = Color(0.7, 1, 1, 1)
+outline_size = 12
+outline_modulate = Color(0, 0, 0, 1)
+text = "PIER 9 DOCK"

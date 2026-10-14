@@ -215,8 +215,9 @@ func _on_physics() -> void:
 			if _phase_tick >= 10:
 				_check(int(_contact.get("times_activated")) == 1,
 					"regression: courier contact still works")
-				_check(String(_toast.get("last_message")).contains("COURIER"),
-					"regression: courier toast intact")
+				# Task 4: the contact now briefs HB-01 instead of the old placeholder.
+				_check(String(_toast.get("last_message")).contains("HB-01"),
+					"regression: courier briefing intact")
 				_check(_player.global_position.y > -0.5, "global: never fell through")
 				_finish()
 	if _tick > 1500:

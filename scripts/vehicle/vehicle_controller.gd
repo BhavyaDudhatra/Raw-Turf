@@ -30,6 +30,10 @@ var _steer: float = 0.0
 var _was_on_wall: bool = false
 
 
+func _ready() -> void:
+	add_to_group("courier_van")
+
+
 func _physics_process(delta: float) -> void:
 	var basis_flat := Basis(Vector3.UP, global_rotation.y)
 	var forward: Vector3 = -basis_flat.z
