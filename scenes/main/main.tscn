@@ -1,7 +1,10 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=39 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/world/building_block.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/ui/toast.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/interact/interactable.gd" id="5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.9, 1)
@@ -72,6 +75,65 @@ emission_enabled = true
 emission = Color(0.1, 0.7, 0.7, 1)
 emission_energy_multiplier = 0.6
 
+[sub_resource type="BoxMesh" id="unit_box"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_asphalt"]
+albedo_color = Color(0.16, 0.16, 0.18, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="mat_sidewalk"]
+albedo_color = Color(0.55, 0.55, 0.57, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="mat_dash"]
+albedo_color = Color(0.9, 0.9, 0.85, 1)
+
+[sub_resource type="CylinderShape3D" id="barrel_shape"]
+radius = 0.4
+height = 1.0
+
+[sub_resource type="CylinderMesh" id="barrel_mesh"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="mat_barrel"]
+albedo_color = Color(0.6, 0.2, 0.12, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="pole_mesh"]
+top_radius = 0.12
+bottom_radius = 0.12
+height = 4.5
+
+[sub_resource type="StandardMaterial3D" id="mat_pole"]
+albedo_color = Color(0.15, 0.15, 0.17, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="mat_lamp"]
+albedo_color = Color(1, 0.9, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.5, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="CylinderMesh" id="pylon_mesh"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="mat_pylon"]
+albedo_color = Color(0.1, 0.8, 0.9, 1)
+emission_enabled = true
+emission = Color(0.1, 0.8, 0.9, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="SphereShape3D" id="contact_shape"]
+radius = 3.0
+
+[sub_resource type="SphereShape3D" id="garage_shape"]
+radius = 2.5
+
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -130,25 +192,199 @@ position = Vector3(-20, 2, 0)
 mesh = SubResource("wall_ew_mesh")
 surface_material_override/0 = SubResource("mat_wall")
 
-[node name="Crates" type="StaticBody3D" parent="."]
+[node name="Roads" type="Node3D" parent="."]
 
-[node name="CrateACollision" type="CollisionShape3D" parent="Crates"]
-position = Vector3(6, 1, -4)
+[node name="HarborAsphalt" type="MeshInstance3D" parent="Roads"]
+position = Vector3(0, 0.02, 0)
+scale = Vector3(40, 0.04, 8)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_asphalt")
+
+[node name="HarborSideN" type="MeshInstance3D" parent="Roads"]
+position = Vector3(0, 0.03, -5)
+scale = Vector3(40, 0.06, 2)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_sidewalk")
+
+[node name="HarborSideS" type="MeshInstance3D" parent="Roads"]
+position = Vector3(0, 0.03, 5)
+scale = Vector3(40, 0.06, 2)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_sidewalk")
+
+[node name="DashM15" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-15, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="DashM10" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-10, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="DashM5" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-5, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="DashP5" type="MeshInstance3D" parent="Roads"]
+position = Vector3(5, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="DashP10" type="MeshInstance3D" parent="Roads"]
+position = Vector3(10, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="DashP15" type="MeshInstance3D" parent="Roads"]
+position = Vector3(15, 0.05, 0)
+scale = Vector3(1.2, 0.02, 0.25)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="CannerAsphalt" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-10, 0.012, 0)
+scale = Vector3(6, 0.04, 40)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_asphalt")
+
+[node name="CannerSideW" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-14, 0.05, 0)
+scale = Vector3(2, 0.06, 40)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_sidewalk")
+
+[node name="CannerSideE" type="MeshInstance3D" parent="Roads"]
+position = Vector3(-6, 0.05, 0)
+scale = Vector3(2, 0.06, 40)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_sidewalk")
+
+[node name="Warehouse" parent="." instance=ExtResource("3")]
+position = Vector3(8, 0, -10)
+size = Vector3(10, 6, 8)
+wall_color = Color(0.6, 0.28, 0.2, 1)
+trim_color = Color(0.25, 0.25, 0.28, 1)
+
+[node name="Garage" parent="." instance=ExtResource("3")]
+position = Vector3(9.5, 0, 12.5)
+size = Vector3(12, 5, 7)
+wall_color = Color(0.32, 0.38, 0.48, 1)
+trim_color = Color(0.2, 0.22, 0.28, 1)
+door_color = Color(0.9, 0.45, 0.1, 1)
+door_width = 5.0
+
+[node name="Apartments" parent="." instance=ExtResource("3")]
+position = Vector3(-16.5, 0, -12)
+size = Vector3(6, 9, 8)
+wall_color = Color(0.75, 0.68, 0.55, 1)
+trim_color = Color(0.15, 0.5, 0.5, 1)
+
+[node name="Shop" parent="." instance=ExtResource("3")]
+position = Vector3(-9, 0, 14.5)
+size = Vector3(6, 4, 6)
+wall_color = Color(0.85, 0.8, 0.7, 1)
+trim_color = Color(0.5, 0.12, 0.1, 1)
+door_color = Color(0.7, 0.15, 0.12, 1)
+
+[node name="Props" type="StaticBody3D" parent="."]
+
+[node name="CrateACollision" type="CollisionShape3D" parent="Props"]
+position = Vector3(2, 1, -8)
 shape = SubResource("crate_shape")
 
-[node name="CrateAMesh" type="MeshInstance3D" parent="Crates"]
-position = Vector3(6, 1, -4)
+[node name="CrateAMesh" type="MeshInstance3D" parent="Props"]
+position = Vector3(2, 1, -8)
 mesh = SubResource("crate_mesh")
 surface_material_override/0 = SubResource("mat_crate")
 
-[node name="CrateBCollision" type="CollisionShape3D" parent="Crates"]
+[node name="CrateBCollision" type="CollisionShape3D" parent="Props"]
 position = Vector3(-5, 0.5, 3)
 shape = SubResource("crate_small_shape")
 
-[node name="CrateBMesh" type="MeshInstance3D" parent="Crates"]
+[node name="CrateBMesh" type="MeshInstance3D" parent="Props"]
 position = Vector3(-5, 0.5, 3)
 mesh = SubResource("crate_small_mesh")
 surface_material_override/0 = SubResource("mat_crate")
+
+[node name="BarrelACollision" type="CollisionShape3D" parent="Props"]
+position = Vector3(5, 0.5, -6)
+shape = SubResource("barrel_shape")
+
+[node name="BarrelAMesh" type="MeshInstance3D" parent="Props"]
+position = Vector3(5, 0.5, -6)
+mesh = SubResource("barrel_mesh")
+surface_material_override/0 = SubResource("mat_barrel")
+
+[node name="BarrelBCollision" type="CollisionShape3D" parent="Props"]
+position = Vector3(-9, 0.5, 8)
+shape = SubResource("barrel_shape")
+
+[node name="BarrelBMesh" type="MeshInstance3D" parent="Props"]
+position = Vector3(-9, 0.5, 8)
+mesh = SubResource("barrel_mesh")
+surface_material_override/0 = SubResource("mat_barrel")
+
+[node name="BarrelCCollision" type="CollisionShape3D" parent="Props"]
+position = Vector3(13, 0.5, 6)
+shape = SubResource("barrel_shape")
+
+[node name="BarrelCMesh" type="MeshInstance3D" parent="Props"]
+position = Vector3(13, 0.5, 6)
+mesh = SubResource("barrel_mesh")
+surface_material_override/0 = SubResource("mat_barrel")
+
+[node name="Lamps" type="Node3D" parent="."]
+
+[node name="Lamp1Pole" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(12, 2.25, -5.5)
+mesh = SubResource("pole_mesh")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Lamp1Head" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(12, 4.65, -5.5)
+scale = Vector3(0.6, 0.3, 0.6)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_lamp")
+
+[node name="Lamp2Pole" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(-16, 2.25, -5.5)
+mesh = SubResource("pole_mesh")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Lamp2Head" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(-16, 4.65, -5.5)
+scale = Vector3(0.6, 0.3, 0.6)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_lamp")
+
+[node name="Lamp3Pole" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(-12, 2.25, 5.5)
+mesh = SubResource("pole_mesh")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Lamp3Head" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(-12, 4.65, 5.5)
+scale = Vector3(0.6, 0.3, 0.6)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_lamp")
+
+[node name="Lamp4Pole" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(6, 2.25, 5.5)
+mesh = SubResource("pole_mesh")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="Lamp4Head" type="MeshInstance3D" parent="Lamps"]
+position = Vector3(6, 4.65, 5.5)
+scale = Vector3(0.6, 0.3, 0.6)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_lamp")
 
 [node name="SpawnPad" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.05, 8)
@@ -157,6 +393,83 @@ surface_material_override/0 = SubResource("mat_pad")
 
 [node name="Player" parent="." instance=ExtResource("1")]
 position = Vector3(0, 1, 8)
+
+[node name="CourierContact" type="Area3D" parent="."]
+position = Vector3(2.2, 0, 6.2)
+script = ExtResource("5")
+prompt_text = "E — Talk to courier"
+response_text = "COURIER RANA: Package leaves from the garage dock. (Placeholder — missions arrive in Task 4.)"
+
+[node name="Range" type="CollisionShape3D" parent="CourierContact"]
+position = Vector3(0, 1, 0)
+shape = SubResource("contact_shape")
+
+[node name="Prompt" type="Label3D" parent="CourierContact"]
+position = Vector3(0, 2.8, 0)
+pixel_size = 0.01
+font_size = 48
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.9, 0.3, 1)
+outline_size = 12
+outline_modulate = Color(0, 0, 0, 1)
+
+[node name="Pylon" type="MeshInstance3D" parent="CourierContact"]
+position = Vector3(0, 1, 0)
+mesh = SubResource("pylon_mesh")
+surface_material_override/0 = SubResource("mat_pylon")
+
+[node name="Base" type="MeshInstance3D" parent="CourierContact"]
+position = Vector3(0, 0.1, 0)
+scale = Vector3(1.2, 0.2, 1.2)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_pole")
+
+[node name="GarageDoor" type="Area3D" parent="."]
+position = Vector3(9.5, 0, 7.4)
+script = ExtResource("5")
+prompt_text = "E — Enter garage"
+response_text = "GARAGE: Locked — vehicle entry arrives in Task 3. (Placeholder.)"
+
+[node name="Range" type="CollisionShape3D" parent="GarageDoor"]
+position = Vector3(0, 1, 0)
+shape = SubResource("garage_shape")
+
+[node name="Prompt" type="Label3D" parent="GarageDoor"]
+position = Vector3(0, 3, 0)
+pixel_size = 0.01
+font_size = 48
+billboard = 1
+no_depth_test = true
+modulate = Color(1, 0.9, 0.3, 1)
+outline_size = 12
+outline_modulate = Color(0, 0, 0, 1)
+
+[node name="Sign" type="MeshInstance3D" parent="GarageDoor"]
+position = Vector3(0, 2.6, 1.55)
+scale = Vector3(2, 0.3, 0.1)
+mesh = SubResource("unit_box")
+surface_material_override/0 = SubResource("mat_dash")
+
+[node name="Toast" type="CanvasLayer" parent="."]
+script = ExtResource("4")
+
+[node name="Label" type="Label" parent="Toast"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -130.0
+offset_right = 400.0
+offset_bottom = -90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+text = "ready"
 
 [node name="DebugOverlay" type="CanvasLayer" parent="."]
 script = ExtResource("2")

@@ -28,6 +28,7 @@ var _spawn_position: Vector3
 
 func _ready() -> void:
 	_spawn_position = global_position
+	add_to_group("player")
 	_apply_pitch()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 

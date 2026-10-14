@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/building_block.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="unit"]
+size = Vector3(1, 1, 1)
+
+[node name="BuildingBlock" type="StaticBody3D"]
+script = ExtResource("1")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("unit")
+
+[node name="Roof" type="MeshInstance3D" parent="."]
+mesh = SubResource("unit")
+
+[node name="Door" type="MeshInstance3D" parent="."]
+mesh = SubResource("unit")
