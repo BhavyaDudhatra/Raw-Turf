@@ -13,3 +13,16 @@ Desktop.ini
 .DS_Store
 *~
 .vscode/
+
+# Dev/scratch and large local artifacts
+scratch_*/
+validation_*/
+downloads_*/
+reports/
+makehuman-community-*.exe
+*.zip
+.inspect_*
+_inspect_*
+.ual_extract/
+ual_extract/
+ACQUISITION_REPORT.md

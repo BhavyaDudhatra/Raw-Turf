@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3]
+[gd_scene load_steps=67 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="2"]
@@ -26,6 +26,8 @@
 [ext_resource type="PackedScene" path="res://assets/props/kenney_light-curved.glb" id="24"]
 [ext_resource type="PackedScene" path="res://assets/props/kenney_road-sign-stop.glb" id="25"]
 [ext_resource type="PackedScene" path="res://assets/props/kenney_traffic-light.glb" id="26"]
+[ext_resource type="Script" path="res://scripts/npc/npc_director.gd" id="27"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/npc_pedestrian.tscn" id="28"]
 
 [sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.9, 1)
@@ -743,3 +745,7 @@ text = "PIER 9 DOCK"
 
 [node name="SaveSystem" type="Node" parent="."]
 script = ExtResource("11")
+
+[node name="NpcDirector" type="Node" parent="."]
+script = ExtResource("27")
+pedestrian_scene = ExtResource("28")

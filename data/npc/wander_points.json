@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "note": "Hand-placed pedestrian waypoint graph for Harbor Row (Task 8, stage 8.0). Positions are world-space XZ on the ground plane (y=0). Links are bidirectional and are declared on both endpoints. No point lies inside the HB-01 delivery lane or the Pier 9 dock pad, so straight-line transits between linked points can never enter the mission route; the keep_out rectangles below make that guarantee machine-checkable (see NpcDirector.verify_waypoints).",
+  "keep_out": [
+    {"id": "delivery_lane", "x_min": 13.0, "x_max": 19.5, "z_min": -9.5, "z_max": 0.5},
+    {"id": "pier9_pad", "x_min": 13.5, "x_max": 19.5, "z_min": -16.0, "z_max": -10.0}
+  ],
+  "points": [
+    {"id": "n_west", "pos": [-18.0, 0.0, -3.5], "links": ["n_canner", "cw_n"]},
+    {"id": "n_canner", "pos": [-10.0, 0.0, -3.5], "links": ["n_west", "n_mid", "s_canner"]},
+    {"id": "n_mid", "pos": [-5.5, 0.0, -3.5], "links": ["n_canner", "ce_m", "s_plaza"]},
+    {"id": "n_wharf", "pos": [10.0, 0.0, -3.5], "links": ["s_east"]},
+    {"id": "s_west", "pos": [-18.0, 0.0, 3.5], "links": ["s_canner", "cw_s"]},
+    {"id": "s_canner", "pos": [-10.0, 0.0, 3.5], "links": ["s_west", "s_plaza", "n_canner"]},
+    {"id": "s_plaza", "pos": [-2.0, 0.0, 3.5], "links": ["s_canner", "s_east", "ce_m", "n_mid"]},
+    {"id": "s_east", "pos": [12.0, 0.0, 3.5], "links": ["s_plaza", "n_wharf", "garage_f"]},
+    {"id": "cw_n", "pos": [-14.5, 0.0, -6.0], "links": ["cw_m", "n_west"]},
+    {"id": "cw_m", "pos": [-14.5, 0.0, 0.0], "links": ["cw_n", "cw_s", "n_west", "s_west"]},
+    {"id": "cw_s", "pos": [-14.5, 0.0, 8.0], "links": ["cw_m", "s_west", "ce_s"]},
+    {"id": "ce_n", "pos": [-5.5, 0.0, -8.0], "links": ["ce_m"]},
+    {"id": "ce_m", "pos": [-5.5, 0.0, 0.0], "links": ["ce_n", "ce_s", "n_mid", "s_plaza"]},
+    {"id": "ce_s", "pos": [-5.5, 0.0, 8.0], "links": ["ce_m", "cw_s", "plaza_n"]},
+    {"id": "plaza_n", "pos": [-2.0, 0.0, 9.0], "links": ["ce_s", "plaza_e"]},
+    {"id": "plaza_e", "pos": [-2.0, 0.0, 13.0], "links": ["plaza_n"]},
+    {"id": "garage_f", "pos": [6.0, 0.0, 7.5], "links": ["s_east", "ce_s"]}
+  ]
+}

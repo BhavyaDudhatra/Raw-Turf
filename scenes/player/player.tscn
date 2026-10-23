@@ -1,6 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/characters/makehuman_test/mh_testchar.fbx" id="2"]
+[ext_resource type="AnimationLibrary" path="res://assets/characters/makehuman_test/mh_retarget_anims.res" id="3"]
+[ext_resource type="Script" path="res://scripts/player/player_animator.gd" id="4"]
 
 [sub_resource type="CapsuleShape3D" id="col"]
 radius = 0.4
@@ -31,6 +34,7 @@ position = Vector3(0, 0.9, 0)
 shape = SubResource("col")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
+visible = false
 position = Vector3(0, 0.9, 0)
 mesh = SubResource("mesh")
 surface_material_override/0 = SubResource("mat_body")
@@ -39,6 +43,19 @@ surface_material_override/0 = SubResource("mat_body")
 position = Vector3(0, 0.45, -0.32)
 mesh = SubResource("visor")
 surface_material_override/0 = SubResource("mat_visor")
+
+[node name="CharacterRoot" type="Node3D" parent="."]
+script = ExtResource("4")
+
+[node name="MHChar" parent="CharacterRoot" instance=ExtResource("2")]
+scale = Vector3(0.1, 0.1, 0.1)
+rotation = Vector3(0, 3.14159, 0)
+
+[node name="CharAnim" type="AnimationPlayer" parent="CharacterRoot"]
+root_node = NodePath("..")
+libraries = {
+"": ExtResource("3")
+}
 
 [node name="CamPivot" type="Node3D" parent="."]
 position = Vector3(0, 1.6, 0)

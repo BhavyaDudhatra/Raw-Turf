@@ -75,6 +75,14 @@ func save_game(slot: String = PRIMARY_SLOT) -> bool:
 			"reward_paid": bool(_mission.get("reward_paid")),
 		},
 	}
+	# Optional NPC persistence (schema v1, backward compatible).
+	var director: Node = get_parent().get_node_or_null("NpcDirector")
+	if director == null:
+		director = get_tree().get_first_node_in_group("npc_director")
+	if director != null and director.has_method("get_save_data"):
+		var npc_data: Variant = director.call("get_save_data")
+		if npc_data is Dictionary and not (npc_data as Dictionary).is_empty():
+			data["npc"] = npc_data
 	var text := JSON.stringify(data, "  ")
 	var main_path := get_save_path(slot)
 	var tmp_path := main_path + ".tmp"
@@ -209,6 +217,14 @@ func _apply(data: Dictionary) -> bool:
 	var m: Dictionary = data["mission"]
 	_mission.call("apply_loaded_state", int(m["state"]), int(m["balance"]), bool(m["reward_paid"]))
 	_sys.call("apply_loaded_mode", int(data["mode"]) == 1)
+	# Optional NPC state (schema v1): rebuild deterministically if present.
+	var npc_data: Variant = data.get("npc", null)
+	if npc_data is Dictionary:
+		var director: Node = get_parent().get_node_or_null("NpcDirector")
+		if director == null:
+			director = get_tree().get_first_node_in_group("npc_director")
+		if director != null and director.has_method("load_save_data"):
+			director.call("load_save_data", npc_data)
 	last_error = ""
 	_toast("Loaded.")
 	return true

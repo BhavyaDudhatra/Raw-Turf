@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "note": "Pedestrian archetypes for Harbor Row (Task 8). One shared material is created per profile so that every pedestrian of the same archetype batches together (draw-call budget). walk_speed is in m/s, idle_seconds is the [min, max] pause at a waypoint, wear_colour is linear RGB.",
+  "profiles": [
+    {
+      "id": "dockhand",
+      "display_name": "Dockhand",
+      "walk_speed": 1.35,
+      "idle_seconds": [1.5, 4.0],
+      "wear_colour": [0.55, 0.45, 0.30],
+      "avoid_player": true,
+      "talk_lines": [
+        "Long night on the piers.",
+        "Keep the lane clear — vans don't brake for us.",
+        "Pier 9's busy this hour."
+      ]
+    },
+    {
+      "id": "runner",
+      "display_name": "Runner",
+      "walk_speed": 1.60,
+      "idle_seconds": [0.8, 2.0],
+      "wear_colour": [0.35, 0.50, 0.70],
+      "avoid_player": true,
+      "talk_lines": [
+        "Package? Don't ask.",
+        "Harbor Row's busy right now.",
+        "Mind the crossing."
+      ]
+    },
+    {
+      "id": "saunterer",
+      "display_name": "Saunterer",
+      "walk_speed": 0.90,
+      "idle_seconds": [2.5, 6.0],
+      "wear_colour": [0.70, 0.55, 0.60],
+      "avoid_player": true,
+      "talk_lines": [
+        "No hurry in this neighborhood.",
+        "The fog rolls in off the water at this hour.",
+        "Nice little street you've got here."
+      ]
+    }
+  ]
+}
